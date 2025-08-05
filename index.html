@@ -1,333 +1,443 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <title>Google News Scraper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <!--Google Fonts-->
-  <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,700,900' rel='stylesheet' type='text/css'>
-  <!--Font Awesome-->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
-
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
-
   <style>
-    body {
-      background: rgba(0, 0, 0, 0.4) url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAGklEQVQIW2NkYGD4D8SMQAwGcAY2AbBKDBUAVuYCBQPd34sAAAAASUVORK5CYII=");
-    }
-
-    /*Reset*/
-    * {
-      list-style: none;
-      margin: 0px;
-    }
-
-    /*Mixins*/
-    @mixin standard-font {
-      color: #FFF;
-      text-decoration: none;
-      font: 16px Lobster;
-      text-shadow: #000 0px 2px 2px;
-    }
-
-    /*Pattern Overlay*/
-    .pat {
-      /* position: fixed; */
-      width: 100%;
-      height: 100%;
-      max-width: 100%;
-    }
-
-    /*Wrappers*/
-    .wrapper {
-      width: 500px;
-      margin: 0 auto;
-      margin-top: 10%;
-
-      /*Typography*/
-      h1 {
-        font: 70px Lobster;
-        color: #FFF;
-        text-align: center;
-        text-shadow: #000 0px 2px 2px;
-        margin-bottom: 40px;
-      }
-
-      a {
-        @include standard-font;
-      }
-
-      a:hover {
-        color: #ccc;
-        -webkit-transition: 0.5s ease;
-        -moz-transition: 0.5s ease;
-        -o-transition: 0.5s ease;
-        -ms-transition: 0.5s ease;
-        transition: 0.5s ease;
-      }
-
-      /*Form*/
-      input {
-        width: 100%;
-        padding: 10px;
-        border: none;
-        border-radius: 50px;
-        box-shadow: #000 0px 1px 5px;
-        margin-bottom: 10px;
-        outline: none;
-        font: 14px Raleway;
-        color: #bdbdbd;
-      }
-
-      /*Result*/
-      .result {
-        @include standard-font;
-        text-align: center;
-        display: none;
-      }
-
-      ul {
-
-        li {
-          float: left;
-          padding: 0px 0px 0px 25px;
-        }
-      }
-    }
-
-    .user {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-
-      li {
-        list-style: none;
-        float: left;
-        padding: 2px;
-      }
-
-      li a {
-        @include standard-font;
-      }
-
-      li a:hover {
-        color: #ccc;
-        -webkit-transition: 0.5s ease;
-        -moz-transition: 0.5s ease;
-        -o-transition: 0.5s ease;
-        -ms-transition: 0.5s ease;
-        transition: 0.5s ease;
-      }
-    }
-
-    .footer {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-
-      li {
-        float: left;
-        list-style: none;
-        padding: 5px;
-      }
-
-      li a {
-        color: #FFF;
-        text-decoration: none;
-        font: 16px Lobster;
-        text-shadow: #000 0px 2px 2px;
-      }
-
-      li a:hover {
-        color: #ccc;
-        -webkit-transition: 0.5s ease;
-        -moz-transition: 0.5s ease;
-        -o-transition: 0.5s ease;
-        -ms-transition: 0.5s ease;
-        transition: 0.5s ease;
-      }
-    }
-
-    .form {
-      position: relative;
-    }
-
-    .res {
-      clear: both;
-      margin-top: 10px;
-      width: 85%;
-
-      h3,
-      p {
-        color: #FFF;
-      }
-
-      h3 {
-        font: 17px Raleway;
-        font-weight: 700;
-        margin-bottom: 6px;
-        text-shadow: #000 0px 2px 2px;
-      }
-
-      p {
-        font: 13px Raleway;
-      }
-    }
-
-    /*Clearfix*/
-    .clearfix:after {
-      content: ".";
-      display: block;
-      clear: both;
-      visibility: hidden;
-      line-height: 0;
-      height: 0;
-    }
-
-    .clearfix {
-      display: inline-block;
-    }
-
-    html[xmlns] .clearfix {
-      display: block;
-    }
-
-    * html .clearfix {
-      height: 1%;
-    }
-
-    /*Font Awesome Fix*/
-    .fa {
-      margin-right: 5px;
-    }
-
-    .fa-cog {
-      margin-left: 15px;
-    }
-
-    table {
-      margin: 0 auto;
-    }
+    /* ...style tetap seperti sebelumnya... */
+    body { font-family: Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: 32px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 16px #0001; padding: 24px 18px 32px 18px; }
+    h2 { color: #217346; margin-bottom: 18px; }
+    form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
+    input[type="text"], input[type="date"] { padding: 10px; font-size: 1rem; border-radius: 6px; border: 1px solid #ccc; flex: 1 1 180px; min-width: 0; }
+    button[type="submit"] { background: #217346; color: #fff; border: none; cursor: pointer; border-radius: 6px; padding: 10px 22px; font-size: 1rem; font-weight: 600; transition: background 0.2s; }
+    button[type="submit"]:hover { background: #145c2c; }
+    table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 0.98rem; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 8px #0001; }
+    th, td { border: 1px solid #eee; padding: 8px 6px; }
+    th { background: #217346; color: #fff; font-weight: 700; text-align: center; }
+    td { vertical-align: top; }
+    img { max-width: 70px; border-radius: 4px; }
+    #pagination { margin-top: 18px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+    #pagination button { background: #217346; color: #fff; border: none; border-radius: 6px; padding: 8px 18px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    #pagination button:disabled { background: #b7cbbf; cursor: not-allowed; }
+    #pagination span { font-size: 1rem; color: #217346; font-weight: 600; }
+    #loadAllBtn { background: linear-gradient(90deg, #0A66C2 60%, #217346 100%); color: #fff; border: none; border-radius: 24px; font-size: 1rem; padding: 10px 22px 10px 16px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px #0002; transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; margin-bottom: 4px; gap: 8px; }
+    #loadAllBtn:hover { background: linear-gradient(90deg, #217346 60%, #0A66C2 100%); transform: translateY(-2px) scale(1.03); box-shadow: 0 4px 16px #0002; }
+    #loadAllBtn svg { vertical-align: middle; margin-right: 6px; }
+    @media (max-width: 700px) { .container { padding: 10px 2vw 18px 2vw; } table, th, td { font-size: 0.93rem; } form { flex-direction: column; align-items: stretch; gap: 8px; } button[type="submit"] { width: 100%; } #pagination { flex-direction: column; gap: 6px; } }
+    @media (max-width: 480px) { th, td { padding: 6px 2px; } img { max-width: 45px; } }
   </style>
 </head>
-
 <body>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
-
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
-  <div class="overlay"></div>
-  <div class="pat">
-    <div class="wrapper">
-      <div class="form">
-        <h1>Crawler BPS</h1>
-        <input type="search" class="search" placeholder="Search......." id="search">
-        <div class="flex">
-          <input type="date" id="dateFrom">
-          <input type="date" id="dateEnd">
-        </div>
-        <p class="result">Generating Results...</p>
-      </div>
-    </div>
-    <table id="crawl-table" class="table table-striped table-bordered" width="100%" style="width:80%" cellspacing="0">
+  <div class="container">
+    <h2>Google News Scraper</h2>
+    <form id="searchForm" autocomplete="off">
+      <input type="text" id="searchKey" placeholder="Masukkan kata kunci pencarian..." required>
+      <input type="date" id="dateFrom" required>
+      <input type="date" id="dateTo" required>
+      <button type="submit">Cari</button>
+      <button type="button" id="loadAllBtn">
+        <svg width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="18" height="18" rx="4" fill="#fff" fill-opacity="0.15"/>
+          <path d="M9 4v7M9 11l-3-3m3 3l3-3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="4" y="13" width="10" height="1.5" rx="0.75" fill="#fff" fill-opacity="0.7"/>
+        </svg>
+        Load All
+      </button>
+    </form>
+    <table id="resultTable">
       <thead>
         <tr>
-          <th>Judul Berita</th>
-          <th>Publisher</th>
+          <th>Judul</th>
           <th>Link</th>
-          <th>Ringkasan</th>
+          <th>Deskripsi</th>
+          <th>Tanggal</th>
+          <th>Publisher</th>
+          <th>Penulis</th>
         </tr>
       </thead>
-      <tbody>
-      </tbody>
+      <tbody></tbody>
     </table>
+    <div id="pagination">
+      <button id="prevBtn" disabled>Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- Scrapping Berita Section -->
+  <div style="margin-top:32px;">
+    <h3>Scrapping Berita</h3>
+    <form id="loadForm" autocomplete="off" style="margin-bottom:10px;">
+      <input type="text" id="previewUrl" placeholder="Masukkan URL website..." required style="width:60%;">
+      <button type="submit">Load Berita</button>
+    </form>
+    <iframe id="htmlWindowPreview" style="width:100%;height:400px;border:1px solid #ccc;border-radius:8px;margin-top:12px;background:#fff;"></iframe>
+    <div id="iframeScrapOutput" style="margin-top:18px; background:#f6f8fa; padding:12px; border-radius:8px;"></div>
+    <form id="xpathManualForm" autocomplete="off" style="margin-top:10px;">
+      <input type="text" id="manualXpath" placeholder="Masukkan XPATH manual..." required style="width:60%;">
+      <button type="submit">Scrap Manual</button>
+    </form>
+    <div id="manualScrapOutput" style="margin-top:12px; background:#f6f8fa; padding:12px; border-radius:8px;"></div>
   </div>
 
   <script>
-    //ready the dom.
-    $(document).ready(function() {
+    let loadedHtml = '';
 
-      //when the search box is entered
-      $(".search").focus(function() {
-        //slideDown the results div
-        $(".result").slideDown(200);
-        //animate the form to the top
-        $(".form").animate({
-          top: "-150px",
+    // Scrapping Berita: Load HTML ke iframe
+    document.getElementById('loadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const url = document.getElementById('previewUrl').value;
+      const windowPreview = document.getElementById('htmlWindowPreview');
+      loadedHtml = '';
+      document.getElementById('iframeScrapOutput').innerHTML = '';
+      document.getElementById('manualScrapOutput').innerHTML = '';
+
+      // Proxy fetch (gunakan backend proxy sendiri)
+      const proxyUrl = `http://localhost:3000/proxy?url=${encodeURIComponent(url)}`;
+      fetch(proxyUrl)
+        .then(res => res.text())
+        .then(html => {
+          loadedHtml = html;
+          windowPreview.srcdoc = html;
+          windowPreview.onload = function() {
+            try {
+              const iframeDoc = windowPreview.contentDocument || windowPreview.contentWindow.document;
+              const allElems = iframeDoc.querySelectorAll('*');
+              allElems.forEach(el => {
+                el.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const xpath = getXPathIframe(el);
+                  const text = el.textContent.trim();
+                  document.getElementById('iframeScrapOutput').innerHTML =
+                    `<div style="background:#fff;border-radius:8px;padding:16px;border:1px solid #217346;box-shadow:0 2px 8px #21734622;">
+                      <div style="font-size:1.05rem;color:#217346;font-weight:600;margin-bottom:8px;">
+                        <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">XPATH</span>:
+                        <code style="background:#f6f8fa;padding:2px 6px;border-radius:4px;">${xpath}</code>
+                      </div>
+                      <div style="font-size:1rem;margin-top:6px;">
+                        <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">Teks</span>:
+                        <pre style="background:#f6f8fa;padding:8px;border-radius:6px;white-space:pre-wrap;margin:0;">${text}</pre>
+                      </div>
+                    </div>`;
+                });
+              });
+            } catch (err) {
+              document.getElementById('iframeScrapOutput').innerHTML = 'Gagal inject event ke iframe.';
+            }
+          };
         });
-      }).blur(function() {
-        //slideUp the results div
-        $(".result").slideUp(200);
-        //animate the form back to its original position
-        $(".form").animate({
-          top: "0px",
-        });
-      });
     });
 
-    function crawl(api, key, cx, date) {
-      var dataString = "flag=fetchmediaaudio";
-
-      $.ajax({
-        type: "GET",
-        url: "https://www.googleapis.com/customsearch/v1?key=" + api + "&cx=" + cx + "&q=" + key + "&num=10&start=1&siteSearch=https://bps.go.id&siteSearchFilter=e&sort=date:r:" + date,
-        data: dataString,
-        success: function(data) {
-          console.log(data);
-          (data.items).forEach(function(datas) {
-            const strPattern = [
-              "\\d{2}-\\d{2}-\\d{4}",
-              "[0-9]{2}/{1}[0-9]{2}/{1}[0-9]{4}",
-              "\\d{1,2}-(?:Jan(?:uari)?|Feb(?:ruari)?|Mar(?:et)?|Apr(?:il)?|Mei|Jun(?:i)?|Jul(?:i)?|Agu(?:stus)?|Sep(?:tember)?|Okt(?:ober)?|Nov(?:ember)?|Des(?:ember)?)-\\d{4}",
-              "\\d{4}-\\d{1,2}-\\d{1,2}",
-              "[0-9]{1,2}\\s(?:Jan(?:uari)?|Feb(?:ruari)?|Mar(?:et)?|Apr(?:il)?|Mei|Jun(?:i)?|Jul(?:i)?|Agu(?:stus)?|Sep(?:tember)?|Okt(?:ober)?|Nov(?:ember)?|Des(?:ember)?)\\s\\d{4}",
-              "\\d{1,2}-\\d{1,2}-\\d{4}",
-              "(?:Jan(?:uari)?|Feb(?:ruari)?|Mar(?:et)?|Apr(?:il)?|Mei|Jun(?:i)?|Jul(?:i)?|Agu(?:stus)?|Sep(?:tember)?|Okt(?:ober)?|Nov(?:ember)?|Des(?:ember)?) \\d{1,2}, \\d{4}"
-
-            ];
-
-            $("#crawl-table").find('tbody')
-              .append('<tr><td>' + datas.title + '</td> <td>' + datas.htmlTitle + '</td> <td><a href="' + datas.link + '">' + datas.link + '</a></td><td>' + datas.snippet + '</td></tr>')
-
-            // if (typeof(datas.pagemap.cse_thumbnail) != "undefined" && datas.pagemap.cse_thumbnail !== null) {
-            //   $("#crawl-table").find('tbody')
-            //     .append('<tr><td>' + datas.title + '</td> <td>' + datas.htmlTitle + '</td> <td>' + datas.link + '</td><td>' + datas.snippet + '</td> <td><img src="' + datas.pagemap.cse_image[0].src + '" alt="' + datas.pagemap.cse_image[0].src + '" style="width:200px;height:300px;"></td></tr>')
-            // } else {
-            //   $("#crawl-table").find('tbody')
-            //     .append('<tr><td>' + datas.title + '</td> <td>' + datas.htmlTitle + '</td> <td>' + datas.link + '</td><td>' + datas.snippet + '</td> <td></td></tr>')
-            // }
-          });
+    // Fungsi XPATH untuk iframe
+    function getXPathIframe(element) {
+      if (element.id) {
+        return `//*[@id="${element.id}"]`;
+      }
+      const parts = [];
+      while (element && element.nodeType === 1) {
+        let index = 1;
+        let sibling = element.previousSibling;
+        while (sibling) {
+          if (sibling.nodeType === 1 && sibling.nodeName === element.nodeName) {
+            index++;
+          }
+          sibling = sibling.previousSibling;
         }
+        parts.unshift(element.nodeName.toLowerCase() + `[${index}]`);
+        element = element.parentNode;
+      }
+      return '/' + parts.join('/');
+    }
+
+    // Fungsi evaluasi XPATH di dokumen
+    function evaluateXPath(doc, xpath) {
+      try {
+        const result = doc.evaluate(xpath, doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        return result.singleNodeValue;
+      } catch {
+        return null;
+      }
+    }
+
+    function evaluateXPathAll(doc, xpath) {
+      try {
+        const result = doc.evaluate(xpath, doc, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        const nodes = [];
+        for (let i = 0; i < result.snapshotLength; i++) {
+          nodes.push(result.snapshotItem(i));
+        }
+        return nodes;
+      } catch {
+        return [];
+      }
+    }
+
+    // Form input manual XPATH (multiple node: gabung jadi satu teks)
+    document.getElementById('xpathManualForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const xpath = document.getElementById('manualXpath').value;
+      const windowPreview = document.getElementById('htmlWindowPreview');
+      let output = '';
+      try {
+        const iframeDoc = windowPreview.contentDocument || windowPreview.contentWindow.document;
+        const results = evaluateXPathAll(iframeDoc, xpath);
+        if (results.length > 0) {
+          const combinedText = results.map(node => node.textContent.trim()).join(' ');
+          output = `<div style="background:#fff;border-radius:8px;padding:16px;border:1px solid #217346;box-shadow:0 2px 8px #21734622;">
+            <div style="font-size:1.05rem;color:#217346;font-weight:600;margin-bottom:8px;">
+              <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">XPATH</span>:
+              <code style="background:#f6f8fa;padding:2px 6px;border-radius:4px;">${xpath}</code>
+            </div>
+            <div style="font-size:1rem;margin-top:6px;">
+              <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">Teks Gabungan</span>:
+              <pre style="background:#f6f8fa;padding:8px;border-radius:6px;white-space:pre-wrap;margin:0;">${combinedText}</pre>
+            </div>
+          </div>`;
+        } else {
+          output = '<div style="color:red;padding:8px;">Element tidak ditemukan dengan XPATH tersebut.</div>';
+        }
+      } catch {
+        output = '<div style="color:red;padding:8px;">Gagal mengambil data dengan XPATH.</div>';
+      }
+      document.getElementById('manualScrapOutput').innerHTML = output;
+    });
+
+    // Google Custom Search API
+    const API_KEY = 'AIzaSyB3F-RAfsHN9iAdTi9iU033vPOMgxAPvBw';
+    const CX = '77dad905e781e4512';
+
+    let currentQuery = '';
+    let currentPage = 1;
+    let totalResults = 0;
+    let currentDateFrom = '';
+    let currentDateTo = '';
+    const resultsPerPage = 10;
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      currentQuery = document.getElementById('searchKey').value;
+      currentDateFrom = document.getElementById('dateFrom').value;
+      currentDateTo = document.getElementById('dateTo').value;
+      currentPage = 1;
+      fetchResults(currentQuery, currentPage, currentDateFrom, currentDateTo);
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchResults(currentQuery, currentPage, currentDateFrom, currentDateTo);
+      }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      const maxPage = Math.ceil(totalResults / resultsPerPage);
+      if (currentPage < maxPage) {
+        currentPage++;
+        fetchResults(currentQuery, currentPage, currentDateFrom, currentDateTo);
+      }
+    });
+
+    function fetchResults(query, page = 1, dateFrom = '', dateTo = '') {
+      const start = (page - 1) * resultsPerPage + 1;
+      let dateParam = '';
+      if (dateFrom && dateTo) {
+        const from = dateFrom.replace(/-/g, '');
+        const to = dateTo.replace(/-/g, '');
+        dateParam = `&sort=date:r:${from}:${to}`;
+      }
+      const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&siteSearch=https://*bps.go.id+https://*.ac.id+https://instagram.com+https://www.researchgate.net&siteSearchFilter=e&q=${encodeURIComponent(query)}&num=${resultsPerPage}&start=${start}${dateParam}`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector('#resultTable tbody');
+          tbody.innerHTML = '';
+          if (!data.items) {
+            tbody.innerHTML = '<tr><td colspan="6">Tidak ada hasil.</td></tr>';
+            document.getElementById('pagination').style.display = 'none';
+            return;
+          }
+          data.items.forEach(item => {
+            let tanggal = '';
+            if (item.pagemap?.metatags?.[0]?.['article:published_time']) {
+              tanggal = item.pagemap.metatags[0]['article:published_time'].split('T')[0];
+            }
+            let publisher = '';
+            if (item.pagemap?.metatags?.[0]?.['og:site_name']) {
+              publisher = item.pagemap.metatags[0]['og:site_name'];
+            }
+            let penulis = '';
+            if (item.pagemap?.metatags?.[0]?.['author']) {
+              penulis = item.pagemap.metatags[0]['author'];
+            }
+            tbody.innerHTML += `
+              <tr>
+                <td>${item.title || ''}</td>
+                <td>
+                  <a href="${item.link}" target="_blank">Link</a>
+                  <button class="scrapBtn" data-url="${item.link}" style="margin-left:8px;background:#217346;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;">Scrap Berita</button>
+                </td>
+                <td>${item.snippet || ''}</td>
+                <td>${tanggal}</td>
+                <td>${publisher}</td>
+                <td>${penulis}</td>
+              </tr>
+            `;
+          });
+
+          // Pagination
+          totalResults = data.searchInformation ? parseInt(data.searchInformation.totalResults) : 0;
+          const maxPage = Math.ceil(totalResults / resultsPerPage);
+          document.getElementById('pagination').style.display = 'flex';
+          document.getElementById('pageInfo').textContent = `Halaman ${currentPage}`;
+          document.getElementById('prevBtn').disabled = currentPage <= 1;
+          document.getElementById('nextBtn').disabled = currentPage >= maxPage || maxPage === 0;
+
+          // Scrap Berita button event
+          addScrapBtnListeners();
+        })
+        .catch(() => {
+          document.querySelector('#resultTable tbody').innerHTML = '<tr><td colspan="6">Gagal mengambil data.</td></tr>';
+          document.getElementById('pagination').style.display = 'none';
+        });
+    }
+
+    // Scrap Berita button event handler
+    function addScrapBtnListeners() {
+      document.querySelectorAll('.scrapBtn').forEach(btn => {
+        btn.onclick = function() {
+          const url = btn.getAttribute('data-url');
+          document.getElementById('previewUrl').value = url;
+          document.getElementById('loadForm').dispatchEvent(new Event('submit'));
+        };
       });
     }
 
-    $("#search").on("change", function() {
-      $("#crawl-table").find('tbody').empty();
+    // Set default tanggal ke hari ini
+    window.onload = function() {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      document.getElementById('dateFrom').value = `${yyyy}-${mm}-01`;
+      document.getElementById('dateTo').value = `${yyyy}-${mm}-${dd}`;
+    };
 
-      var arr = Array();
-      // api = 'AIzaSyASWSbYFuf3XoEILFNwMNLC_E5dHShoA6A'
-      api = 'AIzaSyB3F-RAfsHN9iAdTi9iU033vPOMgxAPvBw'
-      // key = 'Berita "Badan Pusat Statistik" Kepulauan Bangka Belitung'
-      key = $('#search').val();
-      date_from = $('#dateFrom').val();
-      date_end = $('#dateEnd').val();
-      date = date_from.replace(/-/g, '') + ":" + date_end.replace(/-/g, '');
-      // cx = '43f43171131c94b83'
-      cx = '77dad905e781e4512'
-
-      crawl(api, key, cx, date);
+    document.getElementById('loadAllBtn').addEventListener('click', function() {
+      currentQuery = document.getElementById('searchKey').value;
+      currentDateFrom = document.getElementById('dateFrom').value;
+      currentDateTo = document.getElementById('dateTo').value;
+      loadAllResults(currentQuery, currentDateFrom, currentDateTo);
     });
+
+    function loadAllResults(query, dateFrom = '', dateTo = '') {
+      const tbody = document.querySelector('#resultTable tbody');
+      tbody.innerHTML = '<tr><td colspan="6">Loading semua data...</td></tr>';
+      document.getElementById('pagination').style.display = 'none';
+
+      let allItems = [];
+      const maxFetch = 100;
+      let totalToFetch = maxFetch;
+      let fetched = 0;
+
+      function fetchPage(start) {
+        let dateParam = '';
+        if (dateFrom && dateTo) {
+          const from = dateFrom.replace(/-/g, '');
+          const to = dateTo.replace(/-/g, '');
+          dateParam = `&sort=date:r:${from}:${to}`;
+        }
+        const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&siteSearch=https://*bps.go.id+https://*.ac.id+https://instagram.com+https://www.researchgate.net&siteSearchFilter=e&q=${encodeURIComponent(query)}&num=${resultsPerPage}&start=${start}${dateParam}`;
+        fetch(url)
+          .then(res => res.json())
+          .then(data => {
+            if (data.items && data.items.length > 0) {
+              allItems = allItems.concat(data.items);
+              fetched += data.items.length;
+              if (fetched < totalToFetch && data.items.length === resultsPerPage && fetched < 100) {
+                fetchPage(start + resultsPerPage);
+              } else {
+                renderAllResults(allItems);
+              }
+            } else {
+              renderAllResults(allItems);
+            }
+          })
+          .catch(() => {
+            tbody.innerHTML = '<tr><td colspan="6">Gagal mengambil data.</td></tr>';
+          });
+      }
+
+      // Dapatkan totalResults dulu agar tahu batasnya
+      let dateParam = '';
+      if (dateFrom && dateTo) {
+        const from = dateFrom.replace(/-/g, '');
+        const to = dateTo.replace(/-/g, '');
+        dateParam = `&sort=date:r:${from}:${to}`;
+      }
+      const urlFirst = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX}&siteSearch=https://*bps.go.id+https://*.ac.id+https://instagram.com+https://www.researchgate.net&siteSearchFilter=e&q=${encodeURIComponent(query)}&num=${resultsPerPage}&start=1${dateParam}`;
+      fetch(urlFirst)
+        .then(res => res.json())
+        .then(data => {
+          totalToFetch = Math.min(
+            data.searchInformation ? parseInt(data.searchInformation.totalResults) : 0,
+            maxFetch
+          );
+          if (!data.items || totalToFetch === 0) {
+            tbody.innerHTML = '<tr><td colspan="6">Tidak ada hasil.</td></tr>';
+            return;
+          }
+          allItems = data.items;
+          fetched = data.items.length;
+          if (fetched < totalToFetch && data.items.length === resultsPerPage && fetched < 100) {
+            fetchPage(resultsPerPage + 1);
+          } else {
+            renderAllResults(allItems);
+          }
+        })
+        .catch(() => {
+          tbody.innerHTML = '<tr><td colspan="6">Gagal mengambil data.</td></tr>';
+        });
+
+      function renderAllResults(items) {
+        if (!items.length) {
+          tbody.innerHTML = '<tr><td colspan="6">Tidak ada hasil.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = '';
+        items.forEach(item => {
+          let tanggal = '';
+          if (item.pagemap?.metatags?.[0]?.['article:published_time']) {
+            tanggal = item.pagemap.metatags[0]['article:published_time'].split('T')[0];
+          }
+          let publisher = '';
+          if (item.pagemap?.metatags?.[0]?.['og:site_name']) {
+            publisher = item.pagemap.metatags[0]['og:site_name'];
+          }
+          let penulis = '';
+          if (item.pagemap?.metatags?.[0]?.['author']) {
+            penulis = item.pagemap.metatags[0]['author'];
+          }
+          tbody.innerHTML += `
+            <tr>
+              <td>${item.title || ''}</td>
+              <td>
+                <a href="${item.link}" target="_blank">Link</a>
+                <button class="scrapBtn" data-url="${item.link}" style="margin-left:8px;background:#217346;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;">Scrap Berita</button>
+              </td>
+              <td>${item.snippet || ''}</td>
+              <td>${tanggal}</td>
+              <td>${publisher}</td>
+              <td>${penulis}</td>
+            </tr>
+          `;
+        });
+        addScrapBtnListeners();
+      }
+    }
   </script>
 </body>
-
 </html>
