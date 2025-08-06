@@ -5,8 +5,7 @@
   <title>Google News Scraper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ...style tetap seperti sebelumnya... */
-    body { font-family: Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
+    /* body { font-family: Arial, sans-serif; background: #f6f8fa; margin: 0; padding: 0; }
     .container { max-width: 900px; margin: 32px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 16px #0001; padding: 24px 18px 32px 18px; }
     h2 { color: #217346; margin-bottom: 18px; }
     form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
@@ -25,8 +24,202 @@
     #loadAllBtn { background: linear-gradient(90deg, #0A66C2 60%, #217346 100%); color: #fff; border: none; border-radius: 24px; font-size: 1rem; padding: 10px 22px 10px 16px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 8px #0002; transition: background 0.2s, transform 0.1s; display: inline-flex; align-items: center; margin-bottom: 4px; gap: 8px; }
     #loadAllBtn:hover { background: linear-gradient(90deg, #217346 60%, #0A66C2 100%); transform: translateY(-2px) scale(1.03); box-shadow: 0 4px 16px #0002; }
     #loadAllBtn svg { vertical-align: middle; margin-right: 6px; }
-    @media (max-width: 700px) { .container { padding: 10px 2vw 18px 2vw; } table, th, td { font-size: 0.93rem; } form { flex-direction: column; align-items: stretch; gap: 8px; } button[type="submit"] { width: 100%; } #pagination { flex-direction: column; gap: 6px; } }
-    @media (max-width: 480px) { th, td { padding: 6px 2px; } img { max-width: 45px; } }
+    @media (max-width: 700px) {
+      .container { padding: 10px 2vw 18px 2vw; }
+      table, th, td { font-size: 0.93rem; }
+      form { flex-direction: column; align-items: stretch; gap: 8px; }
+      button[type="submit"], #loadAllBtn { width: 100%; margin-top: 6px; }
+      #pagination { flex-direction: column; gap: 6px; }
+      #pagination button { width: 100%; }
+      #previewUrl, #manualXpath { width: 100% !important; }
+      #htmlWindowPreview { height: 220px !important; }
+      #iframeScrapOutput, #manualScrapOutput { font-size: 0.97rem; }
+    }
+    @media (max-width: 480px) {
+      th, td { padding: 6px 2px; }
+      img { max-width: 45px; }
+      .container { padding: 4px 1vw 10px 1vw; }
+      h2, h3 { font-size: 1.1rem; }
+      #htmlWindowPreview { height: 140px !important; }
+      #iframeScrapOutput, #manualScrapOutput { padding: 6px; font-size: 0.93rem; }
+      table { font-size: 0.89rem; }
+    }
+    .scrapBtn { min-width: 90px; font-size: 0.97rem; padding: 8px 0; margin-top: 4px; }
+    @media (max-width: 480px) {
+      .scrapBtn { width: 100%; margin-left: 0; }
+      td a { display: block; margin-bottom: 4px; }
+    } */
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #21734622;
+      padding: 24px 32px 32px 32px;
+      margin-top: 18px;
+    }
+    h2, h3 {
+      color: #217346;
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    form {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    input, select, textarea {
+      border: 1px solid #cfd8dc;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+      background: #f6f8fa;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #217346;
+    }
+    button {
+      background: #217346;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    button:hover, button:focus {
+      background: #145c32;
+    }
+    #htmlWindowPreview {
+      width: 100%;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      min-height: 320px;
+      background: #fff;
+    }
+    #iframeScrapOutput, #manualScrapOutput {
+      margin-top: 12px;
+      margin-bottom: 12px;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px #21734622;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: left;
+      font-size: 1rem;
+    }
+    th {
+      background: #eaf7ef;
+      color: #217346;
+      font-weight: 600;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    #pagination {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 16px;
+      justify-content: center;
+    }
+    #pagination button {
+      min-width: 80px;
+      font-size: 1rem;
+      padding: 8px 0;
+    }
+    .scrapBtn {
+      background: #eaf7ef;
+      color: #217346;
+      border: 1px solid #217346;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.97rem;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .scrapBtn:hover, .scrapBtn:focus {
+      background: #217346;
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      .container {
+        padding: 12px 4vw 18px 4vw;
+        margin-top: 8px;
+      }
+      form {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      button, input, select, textarea {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      #htmlWindowPreview {
+        min-height: 180px;
+      }
+      table, th, td {
+        font-size: 0.93rem;
+      }
+      #pagination {
+        flex-direction: column;
+        gap: 8px;
+      }
+      #iframeScrapOutput, #manualScrapOutput {
+        font-size: 0.97rem;
+        padding: 6px;
+      }
+    }
+    @media (max-width: 480px) {
+      .container {
+        padding: 4px 1vw 10px 1vw;
+      }
+      h2, h3 {
+        font-size: 1.1rem;
+      }
+      #htmlWindowPreview {
+        min-height: 110px;
+      }
+      table, th, td {
+        font-size: 0.89rem;
+        padding: 6px 2px;
+      }
+      .scrapBtn {
+        width: 100%;
+        margin-left: 0;
+      }
+      td a {
+        display: block;
+        margin-bottom: 4px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -85,7 +278,7 @@
   <script>
     let loadedHtml = '';
     let rulesScrap = [];
-    fetch('http://localhost:3000/rules-scrap.json')
+    fetch('https://bookish-bassoon-7p6v5j64jgxhx4x-3000.app.github.dev/rules-scrap.json')
       .then(res => res.json())
       .then(data => { rulesScrap = data; });
 
@@ -99,7 +292,7 @@
       document.getElementById('manualScrapOutput').innerHTML = '';
 
       // Proxy fetch (gunakan backend proxy sendiri)
-      const proxyUrl = `http://localhost:3000/proxy?url=${encodeURIComponent(url)}`;
+      const proxyUrl = `https://bookish-bassoon-7p6v5j64jgxhx4x-3000.app.github.dev/proxy?url=${encodeURIComponent(url)}`;
       fetch(proxyUrl)
         .then(res => res.text())
         .then(html => {
@@ -237,7 +430,7 @@
           if (!alreadyExist) {
             rulesScrap.push({ url: baseUrl, xpath: xpath });
             // Kirim ke backend agar file JSON ikut terupdate
-            fetch('http://localhost:3000/add-rule', {
+            fetch('https://bookish-bassoon-7p6v5j64jgxhx4x-3000.app.github.dev/add-rule', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ url: baseUrl, xpath: xpath })

@@ -4,12 +4,14 @@ const fs = require('fs');
 const cors = require('cors');
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://bookish-bassoon-7p6v5j64jgxhx4x-5500.app.github.dev'
+}));
+
 app.use(express.json());
 
 app.get('/rules-scrap.json', (req, res) => {
   const rulesPath = './rules scrap.json';
-  res.setHeader('Access-Control-Allow-Origin', '*'); // <-- tambahkan baris ini
   if (fs.existsSync(rulesPath)) {
     res.setHeader('Content-Type', 'application/json');
     res.send(fs.readFileSync(rulesPath, 'utf8'));
