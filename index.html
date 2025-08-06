@@ -84,6 +84,10 @@
 
   <script>
     let loadedHtml = '';
+    let rulesScrap = [];
+    fetch('http://localhost:3000/rules-scrap.json')
+      .then(res => res.json())
+      .then(data => { rulesScrap = data; });
 
     // Scrapping Berita: Load HTML ke iframe
     document.getElementById('loadForm').addEventListener('submit', function(e) {
@@ -102,6 +106,34 @@
           loadedHtml = html;
           windowPreview.srcdoc = html;
           windowPreview.onload = function() {
+            const matchedRule = rulesScrap.find(rule => url.startsWith(rule.url));
+            if (matchedRule) {
+              // Isi input XPATH manual dan lakukan scrap otomatis
+              document.getElementById('manualXpath').value = matchedRule.xpath;
+              // Scrap otomatis
+              try {
+                const iframeDoc = windowPreview.contentDocument || windowPreview.contentWindow.document;
+                const results = evaluateXPathAll(iframeDoc, matchedRule.xpath);
+                if (results.length > 0) {
+                  const combinedText = results.map(node => node.textContent.trim()).join(' ');
+                  document.getElementById('manualScrapOutput').innerHTML = `<div style="background:#fff;border-radius:8px;padding:16px;border:1px solid #217346;box-shadow:0 2px 8px #21734622;">
+                    <div style="font-size:1.05rem;color:#217346;font-weight:600;margin-bottom:8px;">
+                      <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">XPATH (Auto)</span>:
+                      <code style="background:#f6f8fa;padding:2px 6px;border-radius:4px;">${matchedRule.xpath}</code>
+                    </div>
+                    <div style="font-size:1rem;margin-top:6px;">
+                      <span style="background:#eaf7ef;padding:2px 8px;border-radius:4px;">Teks Gabungan</span>:
+                      <pre style="background:#f6f8fa;padding:8px;border-radius:6px;white-space:pre-wrap;margin:0;">${combinedText}</pre>
+                    </div>
+                  </div>`;
+                } else {
+                  document.getElementById('manualScrapOutput').innerHTML = '<div style="color:red;padding:8px;">Element tidak ditemukan dengan XPATH rules.</div>';
+                }
+              } catch {
+                document.getElementById('manualScrapOutput').innerHTML = '<div style="color:red;padding:8px;">Gagal mengambil data dengan XPATH rules.</div>';
+              }
+            }
+
             try {
               const iframeDoc = windowPreview.contentDocument || windowPreview.contentWindow.document;
               const allElems = iframeDoc.querySelectorAll('*');
@@ -179,6 +211,7 @@
     document.getElementById('xpathManualForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const xpath = document.getElementById('manualXpath').value;
+      const url = document.getElementById('previewUrl').value;
       const windowPreview = document.getElementById('htmlWindowPreview');
       let output = '';
       try {
@@ -196,10 +229,36 @@
               <pre style="background:#f6f8fa;padding:8px;border-radius:6px;white-space:pre-wrap;margin:0;">${combinedText}</pre>
             </div>
           </div>`;
+
+          // Tambahkan rule baru jika belum
+          const baseUrl = url.split('/').slice(0, 3).join('/'); // ambil base url
+          const alreadyExist = rulesScrap.some(rule => rule.url === baseUrl && rule.xpath === xpath);
+
+          if (!alreadyExist) {
+            rulesScrap.push({ url: baseUrl, xpath: xpath });
+            // Kirim ke backend agar file JSON ikut terupdate
+            fetch('http://localhost:3000/add-rule', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ url: baseUrl, xpath: xpath })
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                alert('Rule baru berhasil ditambahkan ke rulesScrap dan file JSON!');
+              } else {
+                alert('Rule sudah ada di file JSON.');
+              }
+            })
+            .catch(() => {
+              alert('Gagal menambah rule ke file JSON backend.');
+            });
+          }
         } else {
           output = '<div style="color:red;padding:8px;">Element tidak ditemukan dengan XPATH tersebut.</div>';
         }
-      } catch {
+      } catch (err) {
+        console.error('Error evaluating XPATH:', err);
         output = '<div style="color:red;padding:8px;">Gagal mengambil data dengan XPATH.</div>';
       }
       document.getElementById('manualScrapOutput').innerHTML = output;

@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://babelpos.bacakoran.co",
+    "xpath": "/html[1]/body[1]/main[1]/section[1]/div[1]/div[4]/div[1]/div[1]/div[3]/p"
+  },
+  {
+    "url": "https://babel.antaranews.com",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/article[1]/div[1]/div[2]/p"
+  },
+  {
+    "url": "https://rri.co.id",
+    "xpath": "/html[1]/body[1]/div[1]/section[4]/div[3]/div[1]/div[1]/p"
+  },
+  {
+    "url": "https://www.wowbabel.com",
+    "xpath": "/html[1]/body[1]/div[2]/div[1]/div[1]/div[2]/div[1]/div[1]/article[1]/p"
+  },
+  {
+    "url": "https://babel.tribunnews.com",
+    "xpath": "/html[1]/body[1]/div[1]/div[5]/div[5]/div[1]/div[1]/div[1]/div[3]/div[4]/p"
+  },
+  {
+    "url": "https://www.faktaberita.co.id",
+    "xpath": "/html[1]/body[1]/div[1]/div[4]/div[3]/div[1]/div[1]/div[1]/div[1]/main[1]/div[1]/article[1]/div[1]/div[1]/div[1]/p"
+  },
+  {
+    "url": "https://babelpos.disway.id",
+    "xpath": "/html[1]/body[1]/div[2]/div[5]/div[2]/div[1]/section[1]/div[1]/div[1]/p"
+  },
+  {
+    "url": "https://djpb.kemenkeu.go.id",
+    "xpath": "/html[1]/body[1]/div[1]/div[1]/section[3]/div[1]/div[1]/div[1]/div[1]/article[1]/div[2]/div[2]/p"
+  },
+  {
+    "url": "https://babelprov.go.id",
+    "xpath": "/html[1]/body[1]/div[4]/div[3]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/p"
+  }
+]
